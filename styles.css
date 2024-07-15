@@ -108,6 +108,6 @@ legend {
     margin-bottom: 10px;
 }
 
-label {
+label, legend {
     font-weight: 500;
 }
