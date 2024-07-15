@@ -58,6 +58,7 @@ h1 {
 
 button {
     font-size: 1.3rem;
+    font-weight: 450;
     width: 100%;
     height: 60px;
     border-radius: 10px;
@@ -111,4 +112,8 @@ fieldset label {
 
 legend {
     margin-bottom: 10px;
+}
+
+label {
+    font-weight: 500;
 }
