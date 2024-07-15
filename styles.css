@@ -8,7 +8,7 @@
 
 * {
     font-family: 'Roboto', serif;
-    font-size: 1.3rem;
+    font-size: 1.2rem;
     box-sizing: border-box;
 }
 
@@ -41,12 +41,19 @@ h1 {
 }
 
 .book-container {
+    display: flex;
+    flex-direction: column;
     color: white;
-    width: 500px;
+    width: 450px;
     font-size: 1.5rem;
     background-color: var(--main);
     border-radius: 20px;
     padding: 20px;
+    overflow-y: auto;
+}
+
+.book-container button{
+    justify-self: flex-end;
 }
 
 button {
