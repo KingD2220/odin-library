@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap"
+        rel="stylesheet">
+    <script src="script.js" defer></script>
+</head>
+
+<body>
+    <h1>My Library</h1>
+    <button type="button" class="new">Add Book</button>
+
+    <dialog>
+        <form method="dialog">
+            <div>
+                <label for="title">Title: </label>
+                <input type="text" name="title" id="title" required>
+            </div>
+
+            <div>
+                <label for="author">Author: </label>
+                <input type="text" name="author" id="author" required>
+            </div>
+
+            <div>
+                <label for="pages">Number of Pages: </label>
+                <input type="number" name="pages" id="pages">
+            </div>
+
+            <fieldset>
+                <legend>Have you read it?</legend>
+
+                <div class="radio">
+                    <label for="yes">Yes</label>
+                    <input type="radio" id="yes" name="read" value="Yes">
+                </div>
+
+                <div class="radio">
+                    <label for="no">No</label>
+                    <input type="radio" id="no" name="read" value="No" checked="checked">
+                </div>
+            </fieldset>
+
+            <button type="submit">Add Book</button>
+            <button type="button" class="cancel">Cancel</button>
+        </form>
+    </dialog>
+
+    <div class="library-container">
+
+    </div>
+</body>
+
+</html>
