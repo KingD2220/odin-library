@@ -29,7 +29,7 @@ h1 {
 .new {
     margin: auto;
     position: fixed;
-    bottom: 5px;
+    bottom: 0;
 }
 
 .library-container {
@@ -47,7 +47,6 @@ h1 {
     background-color: var(--main);
     border-radius: 20px;
     padding: 20px;
-    /* flex: 0 1 auto; */
 }
 
 button {
@@ -59,7 +58,6 @@ button {
     border-style: none;
     background-color: var(--secondary);
     color: var(--dark);
-    padding:
 }
 
 button:hover {
