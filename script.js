@@ -45,7 +45,6 @@ class Display {
 
     displayLibrary() {
         Display.libraryContainer.innerHTML = '';
-        console.log(this.library);
 
         for (let book of this.library.libraryArray) {
 
