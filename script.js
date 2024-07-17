@@ -1,108 +1,126 @@
-let libraryContainer = document.querySelector('.library-container');
-let reset = document.querySelector('form');
-let myLibrary = [];
-
-function Book(title, author, pages, read, index) {
-    this.title = title;
-    this.author = author;
-    this.pages = pages;
-    this.read = read;
-    this.index = index;
-
-    this.info = function () {
-        let readMessage = read ? 'already read' : 'not read yet';
-        return this.title + ' by ' + this.author + ', ' + this.pages + ' pages, ' + readMessage;
+class Book {
+    constructor(title, author, pages, read, index) {
+        this.title = title;
+        this.author = author;
+        this.pages = pages;
+        this.read = read;
+        this.index = index;
     }
 }
 
+class Library {
+    library = [];
 
-function addBookToLibrary(book) {
-    myLibrary.push(book);
-    displayLibrary();
-}
+    get libraryArray() {
+        return this.library;
+    }
 
-function displayLibrary() {
-    libraryContainer.innerHTML = '';
+    addBookToLibrary(book) {
+        this.library.push(book);
+    }
 
-    for (let book of myLibrary) {
-
-        let mark = '';
-        if(book.read === 'Yes') {
-            mark = 'Mark Unread';
-        }
-        else {
-            mark = 'Mark Read';
+    deleteBook(index) {
+        for (let i = index; i < this.library.length; i++) {
+            this.library[i].index--;
         }
 
-        let bookContainer = document.createElement('div');
-        bookContainer.setAttribute('id', `${book.index}`);
-        bookContainer.setAttribute('class', 'book-container');
-        bookContainer.innerHTML = `<p><strong>Title:</strong> ${book.title}</p> <p><strong>Author:</strong> ${book.author}</p> <p><strong>Pages:</strong> ${book.pages}</p>
-         <p class="read"><strong>Read:</strong> ${book.read}</p> <button class="mark">${mark}</button> <button class="delete">Delete</button>`;
-        libraryContainer.appendChild(bookContainer);
+        this.library.splice(index, 1);
     }
 }
 
-function deleteBook(index) {
-    for (let i = index; i < myLibrary.length; i++) {
-        myLibrary[i].index--;
+class Display {
+    static libraryContainer = document.querySelector('.library-container');
+    static newButton = document.querySelector('.new');
+    static form = document.querySelector('dialog');
+    static reset = document.querySelector('form');
+    static cancelButton = document.querySelector('.cancel');
+
+    constructor(library) {
+        this.library = library;
+        this.bookButtonListener();
+        this.addButtonListener();
+        this.submitButtonListener();
+        this.cancelButtonListener();
     }
 
-    myLibrary.splice(index, 1);
-    displayLibrary();
+    displayLibrary() {
+        Display.libraryContainer.innerHTML = '';
+        console.log(this.library);
+
+        for (let book of this.library.libraryArray) {
+
+            let mark = '';
+            if (book.read === 'Yes') {
+                mark = 'Mark Unread';
+            }
+            else {
+                mark = 'Mark Read';
+            }
+
+            let bookContainer = document.createElement('div');
+            bookContainer.setAttribute('id', `${book.index}`);
+            bookContainer.setAttribute('class', 'book-container');
+            bookContainer.innerHTML = `<p><strong>Title:</strong> ${book.title}</p> <p><strong>Author:</strong> ${book.author}</p> <p><strong>Pages:</strong> ${book.pages}</p>
+            <p class="read"><strong>Read:</strong> ${book.read}</p> <button class="mark">${mark}</button> <button class="delete">Delete</button>`;
+            Display.libraryContainer.appendChild(bookContainer);
+        }
+    }
+
+    bookButtonListener() {
+        Display.libraryContainer.addEventListener("click", (e) => {
+            let parent = e.target.parentNode;
+            //Delete Button
+            if (e.target.getAttribute('class') === 'delete') {
+                this.library.deleteBook(parent.getAttribute('id'));
+                parent.remove();
+            }
+            //Mark Button
+            if (e.target.getAttribute('class') === 'mark') {
+                if (e.target.innerText === 'Mark Unread') {
+                    this.library.libraryArray[parent.getAttribute('id')].read = 'No';
+                    e.target.innerText = 'Mark Read';
+                }
+                else {
+                    this.library.libraryArray[parent.getAttribute('id')].read = 'Yes';
+                    e.target.innerText = 'Mark Unread';
+                }
+            }
+            this.displayLibrary();
+        });
+    }
+
+    addButtonListener() {
+        Display.newButton.addEventListener("click", () => {
+            Display.form.showModal();
+        });
+    }
+
+    submitButtonListener() {
+        Display.form.addEventListener("submit", (e) => {
+            const data = new FormData(e.target);
+            const title = data.get('title');
+            const author = data.get('author');
+            const pages = data.get('pages');
+            const read = data.get('read');
+        
+            let book = new Book(title, author, pages, read, this.library.libraryArray.length);
+            this.library.addBookToLibrary(book);
+            this.displayLibrary();
+
+            Display.reset.reset();
+        });
+    }
+
+    cancelButtonListener() {
+        Display.cancelButton.addEventListener("click", () => {
+            Display.reset.reset();
+            Display.form.close();
+        });
+    }
 }
 
-
-//Event Listeners
-let newButton = document.querySelector('.new');
-let cancelButton = document.querySelector('.cancel');
-let form = document.querySelector('dialog');
-
-libraryContainer.addEventListener("click", (e) => {
-    let parent = e.target.parentNode;
-    //Delete Button
-    if (e.target.getAttribute('class') === 'delete') {
-        deleteBook(parent.getAttribute('id'));
-        parent.remove();
-    }
-    //Mark Button
-    if (e.target.getAttribute('class') === 'mark') {
-        if (e.target.innerText === 'Mark Unread') {
-            myLibrary[parent.getAttribute('id')].read = 'No';
-            e.target.innerText = 'Mark Read';
-        }
-        else {
-            myLibrary[parent.getAttribute('id')].read = 'Yes';
-            e.target.innerText = 'Mark Unread';
-        }
-
-        displayLibrary();
-    }
-});
-
-newButton.addEventListener("click", () => {
-    form.showModal();
-});
-
-form.addEventListener("submit", (e) => {
-    const data = new FormData(e.target);
-    const title = data.get('title');
-    const author = data.get('author');
-    const pages = data.get('pages');
-    const read = data.get('read');
-
-    let book = new Book(title, author, pages, read, myLibrary.length);
-
-    addBookToLibrary(book);
-
-    reset.reset();
-});
-
-cancelButton.addEventListener("click", () => {
-    reset.reset();
-    form.close();
-});
-
+const myLibrary = new Library();
+const display = new Display(myLibrary);
 
 
 
