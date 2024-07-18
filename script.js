@@ -31,22 +31,16 @@ class Library {
 class Display {
     static libraryContainer = document.querySelector('.library-container');
     static newButton = document.querySelector('.new');
-    static form = document.querySelector('dialog');
-    static reset = document.querySelector('form');
-    static cancelButton = document.querySelector('.cancel');
+    static formDisplay = document.querySelector('dialog');
 
-    constructor(library) {
-        this.library = library;
-        this.bookButtonListener();
-        this.addButtonListener();
-        this.submitButtonListener();
-        this.cancelButtonListener();
+    constructor() {
+        this.addButtonDisplayListener();
     }
 
-    displayLibrary() {
+    static displayLibrary(library) {
         Display.libraryContainer.innerHTML = '';
 
-        for (let book of this.library.libraryArray) {
+        for (let book of library) {
 
             let mark = '';
             if (book.read === 'Yes') {
@@ -63,6 +57,25 @@ class Display {
             <p class="read"><strong>Read:</strong> ${book.read}</p> <button class="mark">${mark}</button> <button class="delete">Delete</button>`;
             Display.libraryContainer.appendChild(bookContainer);
         }
+    }
+
+    static addButtonDisplayListener() {
+        Display.newButton.addEventListener("click", () => {
+            Display.formDisplay.showModal();
+        });
+    }
+}
+
+class Controller {
+    static form = document.querySelector('form');
+    static cancelButton = document.querySelector('.cancel');
+
+    constructor (library) {
+        Display.addButtonDisplayListener();
+        this.library = library;
+        this.bookButtonListener();
+        this.submitButtonListener();
+        this.cancelButtonListener();
     }
 
     bookButtonListener() {
@@ -84,18 +97,12 @@ class Display {
                     e.target.innerText = 'Mark Unread';
                 }
             }
-            this.displayLibrary();
-        });
-    }
-
-    addButtonListener() {
-        Display.newButton.addEventListener("click", () => {
-            Display.form.showModal();
+            Display.displayLibrary(this.library.libraryArray);
         });
     }
 
     submitButtonListener() {
-        Display.form.addEventListener("submit", (e) => {
+        Controller.form.addEventListener("submit", (e) => {
             const data = new FormData(e.target);
             const title = data.get('title');
             const author = data.get('author');
@@ -104,22 +111,22 @@ class Display {
         
             let book = new Book(title, author, pages, read, this.library.libraryArray.length);
             this.library.addBookToLibrary(book);
-            this.displayLibrary();
+            Display.displayLibrary(this.library.libraryArray);
 
-            Display.reset.reset();
+            Controller.form.reset();
         });
     }
 
     cancelButtonListener() {
-        Display.cancelButton.addEventListener("click", () => {
-            Display.reset.reset();
-            Display.form.close();
+        Controller.cancelButton.addEventListener("click", () => {
+            Controller.form.reset();
+            Controller.form.close();
         });
     }
 }
 
 const myLibrary = new Library();
-const display = new Display(myLibrary);
+const controller = new Controller(myLibrary);
 
 
 
